@@ -43,7 +43,7 @@ if(isset($_GET['id'])){
 		<h3 class="card-title"><?php echo isset($id) ? "Update ": "Add New " ?> Estate</h3>
 	</div>
 	<div class="card-body">
-		<form action="" id="estate-form">
+		<form action="" id="property-form">
 			<input type="hidden" name ="id" value="<?php echo isset($id) ? $id : '' ?>">
             <div class="row">
                 <div class="col-md-6">
@@ -78,8 +78,8 @@ if(isset($_GET['id'])){
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <label for="sale_price" class="control-label">Price</label>
-                    <input type="text" name="sale_price" id="sale_price" class="form-control form-control-sm rounded-0" required value="<?php echo isset($sale_price) ?$sale_price : '' ?>" />
+                    <label for="price" class="control-label">Price (CAD)</label>
+                    <input type="text" name="price" id="price" class="form-control form-control-sm rounded-0" required value="<?php echo isset($sale_price) ?$sale_price : '' ?>" />
                 </div>
                 <div class="col-md-6">
                     <label for="amenity_ids" class="control-label">Amenities</label>
@@ -96,8 +96,8 @@ if(isset($_GET['id'])){
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <label for="address_line1" class="control-label">Address<sup></sup></label>
-                    <input name="address_line1" id="address_line1" class="form-control form-control-sm rounded-0" value="<?=isset($address_line1) ? $address_line1 : "" ?>"></input>
+                    <label for="address_line" class="control-label">Address<sup></sup></label>
+                    <input name="address_line" id="address_line" class="form-control form-control-sm rounded-0" value="<?=isset($address_line1) ? $address_line1 : "" ?>"></input>
                 </div>
                 <div class="col-md-6">
                     <label for="city" class="control-label">City<sup></sup></label>
@@ -117,14 +117,14 @@ if(isset($_GET['id'])){
             <div class="row">
                 <div class="col-md-6">
                     <label for="coordinates" class="control-label">Map Coordinates</label>
-                    <input type="text" name="coordinates" id="coordinates" class="form-control form-control-sm rounded-0" required value="<?php echo isset($coordinates) ?$coordinates : '' ?>" />
+                    <input name="coordinates" id="coordinates" class="form-control form-control-sm rounded-0" required value="<?php echo isset($coordinates) ?$coordinates : '' ?>" />
                 </div>
                 <div class="col-md-6">
                     <label for="status" class="control-label">Status</label>
                     <select name="status" id="status" class="form-control form-control-sm rounded-0">
-                        <option value="active" <?php echo isset($status) && $status == "active" ? 'selected' : '' ?>>Active</option>
-                        <option value="pending" <?php echo isset($status) && $status == "pending" ? 'selected' : '' ?>>Pending</option>
-                        <option value="sold" <?php echo isset($status) && $status == "sold" ? 'selected' : '' ?>>Sold</option>
+                        <option value="Active" <?php echo isset($status) && $status == "Active" ? 'selected' : '' ?>>Active</option>
+                        <option value="Pending" <?php echo isset($status) && $status == "Pending" ? 'selected' : '' ?>>Pending</option>
+                        <option value="Sold" <?php echo isset($status) && $status == "Sold" ? 'selected' : '' ?>>Sold</option>
                     </select>
                 </div>
             </div>
@@ -179,7 +179,7 @@ if(isset($_GET['id'])){
 		</form>
 	</div>
 	<div class="card-footer">
-		<button class="btn btn-flat btn-primary" form="estate-form">Save</button>
+		<button class="btn btn-flat btn-primary" form="property-form">Save</button>
 		<a class="btn btn-flat btn-default" href="?page=dashboard">Cancel</a>
 	</div>
 </div>
@@ -211,7 +211,7 @@ if(isset($_GET['id'])){
         start_loader()
         
         $.ajax({
-            url: _base_url_+'classes/Master.php?f=delete_img',
+            url: _base_url_+'classes/property.php?f=delete_img',
             data:{path:$path},
             method:'POST',
             dataType:"json",
@@ -249,13 +249,13 @@ if(isset($_GET['id'])){
                 end_loader()
             }, 750);
         }
-		$('#estate-form').submit(function(e){
+		$('#property-form').submit(function(e){
 			e.preventDefault();
             var _this = $(this)
 			 $('.err-msg').remove();
 			start_loader();
 			$.ajax({
-				url:_base_url_+"classes/Master.php?f=save_estate",
+				url:_base_url_+"classes/property.php?f=save",
 				data: new FormData($(this)[0]),
                 cache: false,
                 contentType: false,
@@ -270,7 +270,7 @@ if(isset($_GET['id'])){
 				},
 				success:function(resp){
 					if(typeof resp =='object' && resp.status == 'success'){
-						location.href = "./?page=real_estate/view_estate&id="+resp.eid;
+						location.href = "./?page=property_list";
 					}else if(resp.status == 'failed' && !!resp.msg){
                         var el = $('<div>')
                             el.addClass("alert alert-danger err-msg").text(resp.msg)
