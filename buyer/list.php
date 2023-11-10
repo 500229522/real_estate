@@ -6,9 +6,6 @@
 <div class="card card-outline rounded-0 card-primary">
 	<div class="card-header">
 		<h3 class="card-title">Real Estate List</h3>
-		<div class="card-tools">
-			<a href="?page=property" class="btn btn-flat btn-primary"><span class="fas fa-plus"></span>  Create New</a>
-		</div>
 	</div>
 	<div class="card-body">
 		<div class="container-fluid">
