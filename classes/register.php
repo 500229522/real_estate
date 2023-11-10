@@ -43,6 +43,7 @@ Class Register extends DBConnection {
         $qry = $this->conn->query("INSERT INTO users set {$data}");
         if($qry){
             $id=$this->conn->insert_id;
+            $agent_data = '';
             $agent_data .= " `user_id` = '{$id}' ";
             if ($role == 'Agent') {
                 $agent_qry = $this->conn->query("INSERT INTO agents set {$agent_data}");
