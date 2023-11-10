@@ -47,7 +47,7 @@ if(isset($_GET['id'])){
             <h4 class="card-title">Estate Details</b></h4>
             <div class="card-tools">
                 <a href="./?page=property&id=<?= isset($id) ? $id : '' ?>" class="btn btn-flat btn-sm bg-gradient-primary"><i class="fa fa-edit"></i> Edit Details</a>
-                <button type="button" class="btn btn-flat btn-sm bg-gradient-danger" id="delete_estate"><i class="fa fa-trash"></i> Delete</button>
+                <button type="button" class="btn btn-flat btn-sm bg-gradient-danger" id="delete_property"><i class="fa fa-trash"></i> Delete</button>
             </div>
         </div>
         <div class="card-body">
@@ -167,11 +167,11 @@ $(function(){
         $('.view-image').removeClass("active")
         $(this).addClass("active")
     })
-    $('#delete_estate').click(function(){
-        _conf("Are you sure to delete this Real Estate permanently?","delete_estate",[])
+    $('#delete_property').click(function(){
+        _conf("Are you sure do you want to delete this Real Estate permanently?","delete_property",[])
     })
 })
-function delete_estate($id){
+function delete_property($id){
 		start_loader();
 		$.ajax({
 			url:_base_url_+"classes/property.php?f=delete",
@@ -185,7 +185,7 @@ function delete_estate($id){
 			},
 			success:function(resp){
 				if(typeof resp== 'object' && resp.status == 'success'){
-					location.replace('./?page=real_estate');
+					location.replace('./?page=property_list');
 				}else{
 					alert_toast("An error occured.",'error');
 					end_loader();

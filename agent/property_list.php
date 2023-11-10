@@ -62,7 +62,7 @@
 				                    <div class="dropdown-divider"></div>
 				                    <a class="dropdown-item" href="?page=property&id=<?php echo $row['id'] ?>"><span class="fa fa-edit text-primary"></span> Edit</a>
 				                    <div class="dropdown-divider"></div>
-				                    <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
+				                    <a class="dropdown-item delete" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
 				                  </div>
 							</td>
 						</tr>
@@ -75,7 +75,7 @@
 </div>
 <script>
 	$(document).ready(function(){
-		$('.delete_data').click(function(){
+		$('.delete').click(function(){
 			_conf("Are you sure you want to delete this property permanently?","delete_property",[$(this).attr('data-id')])
 		})
 		$('.table').dataTable({
@@ -101,7 +101,7 @@
 			},
 			success:function(resp){
 				if(typeof resp== 'object' && resp.status == 'success'){
-					location.reload();
+					location.replace('./?page=property_list');
 				}else{
 					alert_toast("An error occured.",'error');
 					end_loader();
