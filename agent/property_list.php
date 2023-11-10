@@ -76,7 +76,7 @@
 <script>
 	$(document).ready(function(){
 		$('.delete_data').click(function(){
-			_conf("Are you sure to delete this real_estate permanently?","delete_real_estate",[$(this).attr('data-id')])
+			_conf("Are you sure you want to delete this property permanently?","delete_property",[$(this).attr('data-id')])
 		})
 		$('.table').dataTable({
 			columnDefs: [
@@ -86,10 +86,11 @@
 		});
 		$('.dataTable td,.dataTable th').addClass('py-1 px-2 align-middle')
 	})
-	function delete_real_estate($id){
+
+	function delete_property($id){
 		start_loader();
 		$.ajax({
-			url:_base_url_+"classes/property.php?f=delete_real_estate",
+			url:_base_url_+"classes/property.php?f=delete",
 			method:"POST",
 			data:{id: $id},
 			dataType:"json",

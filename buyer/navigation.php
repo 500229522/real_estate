@@ -33,7 +33,7 @@
                     </li> 
                     </br>
                     <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>buyer/?page=about_us" class="nav-link nav-real_estate_manage_estate">
+                      <a href="<?php echo base_url ?>buyer/?page=aboutus" class="nav-link nav-real_estate_manage_estate">
                         <i class="nav-icon fas fa-info"></i>
                         <p>
                             About Us

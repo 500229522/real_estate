@@ -146,6 +146,23 @@ Class Property extends DBConnection {
 		}
 		return json_encode($resp);
 	}
+
+    function delete(){
+		extract($_POST);
+
+        date_default_timezone_set("EST5EDT");
+        $deleted_date = date('Y-m-d');
+
+		$del = $this->conn->query("UPDATE `properties` SET deleted_date = '{$deleted_date}' WHERE id = '{$id}'");
+		if($del){
+			$resp['status'] = 'success';
+			$this->settings->set_flashdata('success'," property successfully deleted.");			
+		}else{
+			$resp['status'] = 'failed';
+			$resp['error'] = $this->conn->error;
+		}
+		return json_encode($resp);
+	}
 }
 
 $property = new Property();
@@ -154,7 +171,10 @@ $sysset = new SystemSettings();
 switch ($action) {
 	case 'save':
 		echo $property->save();
-	break;
+	    break;
+    case 'delete':
+        echo $property->delete();
+        break;
 	default:
 		break;
 }
