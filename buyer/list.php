@@ -14,9 +14,9 @@
 				<colgroup>
 					<col width="5%">
 					<col width="20%">
-					<col width="30%">
+					<col width="25%">
 					<col width="20%">
-					<col width="10%">
+					<col width="15%">
 					<col width="15%">
 				</colgroup>
 				<thead>
@@ -32,7 +32,7 @@
 				<tbody>
 					<?php 
 					    $i = 1;
-						$qry = $conn->query("select p.id, p.name, pt.type, CONCAT(u.last_name, ', ', u.first_name) as fullname, p.status from properties p join agents a on p.agent_id = a.id join users u on a.user_id = u.id join property_types pt on p.type_id = pt.id where p.deleted_date is null");
+						$qry = $conn->query("select p.id, p.name, pt.type, CONCAT(u.first_name, ' ', u.last_name) as fullname, p.status, u.email from properties p join agents a on p.agent_id = a.id join users u on a.user_id = u.id join property_types pt on p.type_id = pt.id where p.deleted_date is null");
 						while($row = $qry->fetch_assoc()):
 					?>
 						<tr>
@@ -57,7 +57,7 @@
 				                  <div class="dropdown-menu" role="menu">
 								  	<a class="dropdown-item" href="?page=view_property&id=<?php echo $row['id'] ?>"><span class="fa fa-eye text-dark"></span> View</a>
 				                    <div class="dropdown-divider"></div>
-				                    <a class="dropdown-item" href=""><span class="fa fa-phone text-primary"></span> Contact Agent</a>
+				                    <a class="dropdown-item" href="mailto:<?php echo $row['email'] ?>"><span class="fa fa-phone text-primary"></span> Contact Agent</a>
 				                  </div>
 							</td>
 						</tr>

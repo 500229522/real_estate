@@ -1,6 +1,6 @@
 <?php 
 if(isset($_GET['id'])){
-    $qry = $conn->query("select p.*, pt.type, CONCAT(u.last_name, ', ', u.first_name) as fullname from properties p join agents a on p.agent_id = a.id join users u on a.user_id = u.id join property_types pt on p.type_id = pt.id where p.id = '{$_GET['id']}' and p.deleted_date is null");
+    $qry = $conn->query("select p.*, pt.type, CONCAT(u.first_name, ' ', u.last_name) as fullname from properties p join agents a on p.agent_id = a.id join users u on a.user_id = u.id join property_types pt on p.type_id = pt.id where p.id = '{$_GET['id']}' and p.deleted_date is null");
     if($qry->num_rows > 0){
         $res = $qry->fetch_array();
         foreach($res as $k => $v){
@@ -21,7 +21,7 @@ if(isset($_GET['id'])){
         }
         if(isset($agent_id)){
             $agent_det = [];
-            $agent = $conn->query("SELECT u.mobile, u.email, u.role, CONCAT(u.last_name,', ', u.first_name) as fullname FROM agents a join users u on a.user_id = u.id where a.id = '{$agent_id}' ");
+            $agent = $conn->query("SELECT u.mobile, u.email, u.role, CONCAT(u.first_name,' ', u.last_name) as fullname FROM agents a join users u on a.user_id = u.id where a.id = '{$agent_id}' ");
             $agent_det = $agent->fetch_array();
         }
     }else{

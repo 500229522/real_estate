@@ -16,10 +16,10 @@
 			<table class="table table-hover table-striped table-bordered">
 				<colgroup>
 					<col width="5%">
+					<col width="25%">
 					<col width="20%">
-					<col width="30%">
 					<col width="20%">
-					<col width="10%">
+					<col width="15%">
 					<col width="15%">
 				</colgroup>
 				<thead>
@@ -35,7 +35,7 @@
 				<tbody>
 					<?php 
 					    $i = 1;
-						$qry = $conn->query("select p.id, p.name, pt.type, CONCAT(u.last_name, ', ', u.first_name) as fullname, p.status from properties p join agents a on p.agent_id = a.id join users u on a.user_id = u.id join property_types pt on p.type_id = pt.id where p.agent_id = '{$_settings->userdata('id')}' and p.deleted_date is null");
+						$qry = $conn->query("select p.id, p.name, pt.type, CONCAT(u.first_name, ' ', u.last_name) as fullname, p.status from properties p join agents a on p.agent_id = a.id join users u on a.user_id = u.id join property_types pt on p.type_id = pt.id where p.agent_id = '{$_settings->userdata('id')}' and p.deleted_date is null");
 						while($row = $qry->fetch_assoc()):
 					?>
 						<tr>
