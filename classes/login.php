@@ -27,26 +27,26 @@ class Login extends DBConnection {
                 if ($k == 'role') {
                     $role = $v;
                 }
-
-                if ($role == 'Agent') {
-                    $user_id = $this->settings->userdata('id');
-                    $agent_stmt = $this->conn->prepare("SELECT * FROM users u join agents a on u.id = a.user_id where u.id = ? "); 
-                    $agent_stmt->bind_param('s', $user_id);
-                    $agent_stmt->execute();
-                    $agent_result = $agent_stmt->get_result();
-                    if($agent_result->num_rows > 0){
-                        foreach($agent_result->fetch_array() as $k => $v){                        
-                            if(!is_numeric($k)){
-                                $this->settings->set_userdata($k,$v);
-                            }
-                        }
-                    }
-                } else {
-                    if(!is_numeric($k) && $k != 'password'){
-                        $this->settings->set_userdata($k,$v);
-                    }
+                
+                if(!is_numeric($k) && $k != 'password'){
+                    $this->settings->set_userdata($k,$v);
                 }
 			}
+
+            if ($role == 'Agent') {
+                $user_id = $this->settings->userdata('id');
+                $agent_stmt = $this->conn->prepare("SELECT * FROM users u join agents a on u.id = a.user_id where u.id = ? "); 
+                $agent_stmt->bind_param('s', $user_id);
+                $agent_stmt->execute();
+                $agent_result = $agent_stmt->get_result();
+                if($agent_result->num_rows > 0){
+                    foreach($agent_result->fetch_array() as $k => $v){                        
+                        if(!is_numeric($k)){
+                            $this->settings->set_userdata($k,$v);
+                        }
+                    }
+                }
+            }
  
 		    return json_encode(array('status'=>'success', 'role'=> $role));
 		}else{
