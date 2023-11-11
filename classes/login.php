@@ -21,6 +21,7 @@ class Login extends DBConnection {
 		$stmt->bind_param('ss', $email, $password);
 		$stmt->execute();
 		$result = $stmt->get_result();
+        $role = '';
 		if($result->num_rows > 0){
 			foreach($result->fetch_array() as $k => $v){
 
