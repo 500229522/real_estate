@@ -11,7 +11,7 @@ Class Property extends DBConnection {
 		parent::__destruct();
 	}
 	function save(){
-		$_POST['description'] = htmlentities($_POST['description']);
+        $_POST['description'] = htmlentities($_POST['description']);
 		$_POST['agent_id'] = $this->settings->userdata('id');
         
 		extract($_POST);
@@ -25,11 +25,13 @@ Class Property extends DBConnection {
 		}
 		if(empty($id)){
 			$sql = "INSERT INTO `properties` set {$data} ";
-		}
+		} else {
+            $sql = "UPDATE `properties` set {$data} WHERE id = '{$id}'";
+        }
 
 		$save = $this->conn->query($sql);
 		if($save){
-			$property_id = $this->conn->insert_id;
+			$property_id = empty($id) ? $this->conn->insert_id : $id;
 			$resp['property_id'] = $property_id;
 			$upload_path = "uploads/estate_".$property_id;
 			$resp['msg'] = " Data successfully saved.";
@@ -130,6 +132,7 @@ Class Property extends DBConnection {
                         $data .= "('{$property_id}', '{$v}')";
                 }
                 if(!empty($data)){
+                    $this->conn->query("DELETE FROM `property_amenities` where `property_id` = '{$property_id}'");
                     $sql3 = "INSERT INTO `property_amenities` (`property_id`, `amenity_id`) VALUES {$data}";
                     $save3 = $this->conn->query($sql3);
                     if(!$save3){

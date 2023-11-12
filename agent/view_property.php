@@ -46,7 +46,7 @@ if(isset($_GET['id'])){
         <div class="card-header">
             <h4 class="card-title">Estate Details</b></h4>
             <div class="card-tools">
-                <a href="./?page=property&id=<?= isset($id) ? $id : '' ?>" class="btn btn-flat btn-sm bg-gradient-primary"><i class="fa fa-edit"></i> Edit Details</a>
+                <a href="./?page=property&id=<?= isset($id) ? $id : '' ?>" class="btn btn-flat btn-sm bg-gradient-primary"><i class="fa fa-edit"></i> Update Details</a>
                 <button type="button" class="btn btn-flat btn-sm bg-gradient-danger" id="delete_property"><i class="fa fa-trash"></i> Delete</button>
             </div>
         </div>
@@ -66,6 +66,9 @@ if(isset($_GET['id'])){
                                 if(in_array($img,array('.','..')))
                                     continue;
                         ?>
+                        <div class="col">
+                            <a href="javascript:void(0)" class="view-image"><img src="<?php echo validate_image('uploads/estate_'.$id.'/'.$img) ?>" loading="lazy"  class="img-thumbnail bg-gradient-dark" alt=""></a>
+                        </div>
                         <?php endforeach; ?>
                         <?php endif; ?>
                         <?php endif; ?>
@@ -83,7 +86,7 @@ if(isset($_GET['id'])){
                                 <span class="text-muted">Purpose: </span><?= isset($purpose) ? $purpose : '' ?>
                             </div>
                             <div class="col-6">
-                                <span class="text-muted">Area: </span><?= isset($area) ? $area : '' ?>
+                                <span class="text-muted">Area (Sqft): </span><?= isset($area) ? $area : '' ?>
                             </div>
                             <div class="col-6">
                                 <span class="text-muted">Price (CAD): </span><?= isset($price) ? format_num($price) : '' ?>

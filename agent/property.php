@@ -1,6 +1,6 @@
 <!-- <?php 
 if(isset($_GET['id'])){
-    $qry = $conn->query("SELECT r.*,t.name as rtype FROM `real_estate_list` r inner join `type_list` t on r.type_id = t.id where r.id = '{$_GET['id']}' ");
+    $qry = $conn->query("select p.*, pt.type, CONCAT(u.first_name, ' ', u.last_name) as fullname from properties p join agents a on p.agent_id = a.id join users u on a.user_id = u.id join property_types pt on p.type_id = pt.id where p.id = '{$_GET['id']}' and p.deleted_date is null");
     if($qry->num_rows > 0){
         $res = $qry->fetch_array();
         foreach($res as $k => $v){
@@ -9,25 +9,26 @@ if(isset($_GET['id'])){
             }
         }
         if(isset($id)){
-            $meta_qry = $conn->query("SELECT * FROM `real_estate_meta` where real_estate_id = '{$id}'");
-            while($row = $meta_qry->fetch_assoc()){
-                ${$row['meta_field']} = $row['meta_value'];
-            }
+            $image_arry = [];
+            $img_qry = $conn->query("SELECT * FROM `property_images` where property_id = '{$_GET['id']}'");
+            $image_arry = $img_qry->fetch_array();
 
             $amenity_ids = [];
-            $amentiy_qry = $conn->query("SELECT * FROM `amenity_list` where id in (SELECT `amenity_id` FROM `real_estate_amenities` where real_estate_id = '{$id}') order by `name`");
+            $amentiy_qry = $conn->query("select * from amenities where id in (select amenity_id from property_amenities where property_id = '{$_GET['id']}')");
             while($row = $amentiy_qry->fetch_assoc()){
                 $amenity_ids[] = $row['id'];
             }
         }
         if(isset($agent_id)){
             $agent_det = [];
-            $agent = $conn->query("SELECT *,CONCAT(lastname,', ', firstname, ' ', COALESCE(middlename,''))as fullname FROM `agent_list` where id = '{$agent_id}' ");
+            $agent = $conn->query("SELECT u.mobile, u.email, u.role, CONCAT(u.first_name,' ', u.last_name) as fullname FROM agents a join users u on a.user_id = u.id where a.id = '{$agent_id}' ");
             $agent_det = $agent->fetch_array();
         }
     }else{
         echo '<script> alert("Unknown Real Estate\'s ID."); location.replace("./?page=real_estate"); </script>';
     }
+}else{
+    echo '<script> alert("Real Estate\'s ID is required to access the page."); location.replace("./?page=real_estate"); </script>';
 }
 ?> -->
 <style>
@@ -72,24 +73,24 @@ if(isset($_GET['id'])){
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label for="area" class="control-label">Area</label>
+                    <label for="area" class="control-label">Area (Sqft)</label>
                     <input type="text" name="area" id="area" class="form-control form-control-sm rounded-0" required value="<?php echo isset($area) ?$area : '' ?>" />
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
                     <label for="price" class="control-label">Price (CAD)</label>
-                    <input type="text" name="price" id="price" class="form-control form-control-sm rounded-0" required value="<?php echo isset($sale_price) ?$sale_price : '' ?>" />
+                    <input type="text" name="price" id="price" class="form-control form-control-sm rounded-0" required value="<?php echo isset($price) ? $price : '' ?>" />
                 </div>
                 <div class="col-md-6">
                     <label for="amenity_ids" class="control-label">Amenities</label>
                     <select name="amenity_ids[]" id="amenity_ids" class="form-control form-control-sm -rounded-0 select2" multiple required>
                         <option value=""></option>
                         <?php
-                            $qry = $conn->query("SELECT * FROM `amenities` where deleted_date is null order by `amenity` asc");
+                            $qry = $conn->query("SELECT * FROM `amenities` where deleted_date is null ".(isset($id) ? " or id = '{$row['id']}' ": "")." order by `amenity` asc");
                             while($row= $qry->fetch_assoc()):
                         ?>
-                        <option value="<?php echo $row['id'] ?>" <?php echo isset($type_id) && isset($amenity_ids) && in_array($type_id,$amenity_ids) ? 'selected' : '' ?>><?php echo $row['amenity'] ?></option>
+                        <option value="<?php echo $row['id'] ?>" <?php echo isset($row['id']) && isset($amenity_ids) && in_array($row['id'],$amenity_ids) ? 'selected' : '' ?>><?php echo $row['amenity'] ?></option>
                         <?php endwhile; ?>
                     </select>
                 </div>
@@ -97,7 +98,7 @@ if(isset($_GET['id'])){
             <div class="row">
                 <div class="col-md-6">
                     <label for="address_line" class="control-label">Address<sup></sup></label>
-                    <input name="address_line" id="address_line" class="form-control form-control-sm rounded-0" value="<?=isset($address_line1) ? $address_line1 : "" ?>"></input>
+                    <input name="address_line" id="address_line" class="form-control form-control-sm rounded-0" value="<?=isset($address_line) ? $address_line : "" ?>"></input>
                 </div>
                 <div class="col-md-6">
                     <label for="city" class="control-label">City<sup></sup></label>
@@ -137,12 +138,12 @@ if(isset($_GET['id'])){
                 <div class="col-md-6">
                     <label for="" class="control-label">Thumbnail</label>
                     <div class="custom-file custom-file-sm rounded-0">
-                        <input type="hidden" name="thumbnail_path" value="<?= isset($thumbnail_path) ? $thumbnail_path : "" ?>">
+                        <input type="hidden" name="thumbnail_path" value="<?= isset($image_arry['thumbnail_path']) ? $image_arry['thumbnail_path'] : "" ?>">
                         <input type="file" class="custom-file-input rounded-0 form-control-sm" id="customFile" name="img" onchange="displayImg(this,$(this))" accept="image/png, image/jpeg">
                         <label class="custom-file-label rounded-0" for="customFile">Choose file</label>
                     </div>
                     <div class="text-center">
-                        <img src="<?php echo validate_image(isset($thumbnail_path) ? $thumbnail_path : "") ?>" alt="" id="cimg" class="img-fluid img-thumbnail bg-gradient-gray">
+                        <img src="<?php echo validate_image(isset($image_arry['thumbnail_path']) ? $image_arry['thumbnail_path'] : "") ?>" alt="" id="cimg" class="img-fluid img-thumbnail bg-gradient-gray">
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -179,7 +180,7 @@ if(isset($_GET['id'])){
 		</form>
 	</div>
 	<div class="card-footer">
-		<button class="btn btn-flat btn-primary" form="property-form">Save</button>
+		<button class="btn btn-flat btn-primary" form="property-form"><?php echo isset($id) ? "Update ": "Save" ?></button>
 		<a class="btn btn-flat btn-default" href="?page=dashboard">Cancel</a>
 	</div>
 </div>
