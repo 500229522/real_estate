@@ -15,7 +15,7 @@ class SystemSettings extends DBConnection{
         $_SESSION['system_info']['name'] = "Real Estate System";
         $_SESSION['system_info']['short_name'] = "Real Estate";
         $_SESSION['system_info']['logo'] = "uploads/logo-1645233884.jpg?v=1645233884";
-        $_SESSION['system_info']['cover'] = "uploads/cover-1645233884.jpg?v=1645233884";
+        $_SESSION['system_info']['cover'] = "uploads/background.jpg";
 	}
 	function update_system_info(){
 		$sql = "SELECT * FROM system_info";

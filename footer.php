@@ -1,6 +1,6 @@
 <!-- Footer-->
 <meta name="viewport" content="height=device-height, initial-scale=1">
-<footer class="py-4 bg-gradient-primary">
+<footer class="py-4 bg-gradient-dark">
             <div class="container">
               <p class="m-0 text-center text-white">Copyright &copy; 2023</p>
           </div>
