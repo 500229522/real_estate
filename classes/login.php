@@ -63,7 +63,7 @@ class Login extends DBConnection {
  
 		    return json_encode(array('status'=>'success', 'role'=> $role));
 		}else{
-		    return json_encode(array('status'=>'failed'));
+		    return json_encode(array('status'=>'failed', 'msg' => 'Please enter valid credentials'));
 		}
 	}
 
