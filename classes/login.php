@@ -14,15 +14,27 @@ class Login extends DBConnection {
 	}
 
 	public function login(){
+        // Import variables from data array which is passed when the login function is being called
 		extract($_POST);
 
+        // Prepare statement to check whether the user is exists
 		$stmt = $this->conn->prepare("SELECT * from users where email = ? and password = ? and deleted_date is null ");
+
+        // Convert password md5 hash string
         $password = md5($password);
+
+        // Bind parameter values for the select statement
 		$stmt->bind_param('ss', $email, $password);
+
+        // Execute the statements with the bound values
 		$stmt->execute();
+
+        // Get result from prepared statement
 		$result = $stmt->get_result();
         $role = '';
 		if($result->num_rows > 0){
+
+            // Loop through the array of result
 			foreach($result->fetch_array() as $k => $v){
 
                 if ($k == 'role') {
@@ -56,6 +68,7 @@ class Login extends DBConnection {
 	}
 
 	public function logout(){
+        // Destroy the session variables and redirect to login page
 		if($this->settings->sess_des()){
 			redirect('login.php');
 		}

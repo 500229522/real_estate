@@ -11,7 +11,10 @@ Class Property extends DBConnection {
 		parent::__destruct();
 	}
 	function save(){
+        // Convert the description value to all applicable html entity
         $_POST['description'] = htmlentities($_POST['description']);
+
+        // Get the id of the agent which is stored in userdata session variable
 		$_POST['agent_id'] = $this->settings->userdata('id');
         
 		extract($_POST);
@@ -23,6 +26,8 @@ Class Property extends DBConnection {
 				$data .= " `{$k}`='{$this->conn->real_escape_string($v)}' ";
 			}
 		}
+
+        // If the property id is passed, update the property with given values and if not insert the values to properties table
 		if(empty($id)){
 			$sql = "INSERT INTO `properties` set {$data} ";
 		} else {
@@ -31,6 +36,7 @@ Class Property extends DBConnection {
 
 		$save = $this->conn->query($sql);
 		if($save){
+            // Get the inserted row id or the passed id when calling the function
 			$property_id = empty($id) ? $this->conn->insert_id : $id;
 			$resp['property_id'] = $property_id;
 			$upload_path = "uploads/estate_".$property_id;
@@ -38,6 +44,8 @@ Class Property extends DBConnection {
 			$resp['status'] = 'success';
 			if(!is_dir(base_app.$upload_path))
 				mkdir(base_app.$upload_path);
+
+                // Store image files
 			if(isset($_FILES['imgs']) && count($_FILES['imgs']['tmp_name']) > 0){
 				$err = "";
 				foreach($_FILES['imgs']['tmp_name'] as $k => $v){
@@ -117,6 +125,8 @@ Class Property extends DBConnection {
 				}
 			}
 			$data="";
+            
+            // Store property amenities
 			foreach($_POST as $k =>$v){
 				if(!in_array($k,array_merge($prop_tbl_allowed_fields,['id','amenity_ids']))){
 					if(!empty($data)) $data .=", ";

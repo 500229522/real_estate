@@ -11,6 +11,7 @@ Class Register extends DBConnection {
 		parent::__destruct();
 	}
 	public function save_users(){
+        // Import variables from data array which is passed when the register function is being called
 		extract($_POST);
 		$data = '';
 		foreach($_POST as $k => $v){
@@ -23,15 +24,15 @@ Class Register extends DBConnection {
                 }
 			}
 		}
+
+        // Generate md5 string of the password
 		if(!empty($password)){
 			$password = md5($password);
 			if(!empty($data)) $data .=" , ";
 			$data .= " `password` = '{$password}' ";
 		}
-        date_default_timezone_set("EST5EDT");
-        $created_date = date('Y-m-d');
-        // $data .= " `created_date` = '{$created_date}' ";
-        // $data .= " `updated_date` = '{$created_date}' ";
+ 
+        // Check whether the email is alreadt exists
         $check = $this->conn->query("SELECT * FROM `users` where `email` = '{$email}' and deleted_date is null ")->num_rows;
 		if($check > 0){
 			$resp['status'] = 'failed';
@@ -40,12 +41,16 @@ Class Register extends DBConnection {
 			exit;
 		}
 
+        // Insert data to users table
         $qry = $this->conn->query("INSERT INTO users set {$data}");
         if($qry){
+            // Get the inserted id of the row
             $id=$this->conn->insert_id;
             $agent_data = '';
             $agent_data .= " `user_id` = '{$id}' ";
             if ($role == 'Agent') {
+
+                // Insert data to agents table
                 $agent_qry = $this->conn->query("INSERT INTO agents set {$agent_data}");
 
                 if ($agent_qry) {

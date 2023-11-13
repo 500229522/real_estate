@@ -15,6 +15,7 @@ class DBConnection{
 
         if (!isset($this->conn)) {
             
+            // Create db connection
             $this->conn = new mysqli($this->host, $this->username, $this->password, $this->database);
             
             if (!$this->conn) {
@@ -25,6 +26,7 @@ class DBConnection{
         
     }
     public function __destruct(){
+        // Close db connection
         $this->conn->close();
     }
 }

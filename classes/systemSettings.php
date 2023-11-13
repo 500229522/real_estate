@@ -11,6 +11,7 @@ class SystemSettings extends DBConnection{
 		return($this->conn);
 	}
 	function load_system_info(){
+        // Store system settings in session variables
         $_SESSION['system_info']['name'] = "Real Estate System";
         $_SESSION['system_info']['short_name'] = "Real Estate";
         $_SESSION['system_info']['logo'] = "uploads/logo-1645233884.jpg?v=1645233884";
@@ -162,11 +163,13 @@ class SystemSettings extends DBConnection{
 		return json_encode($resp);
 	}
 	function set_userdata($field='',$value=''){
+        // If the field is not empty, then set the value to the relevant field of userdata session variable
 		if(!empty($field) && !empty($value)){
 			$_SESSION['userdata'][$field]= $value;
 		}
 	}
 	function userdata($field = ''){
+        // Get the value binded to the passes field name in userdata session variable
 		if(!empty($field)){
 			if(isset($_SESSION['userdata'][$field]))
 				return $_SESSION['userdata'][$field];
@@ -199,13 +202,14 @@ class SystemSettings extends DBConnection{
 		}
 	}
 	function sess_des(){
+        // Unset userdata session variable values
 		if(isset($_SESSION['userdata'])){
 				unset($_SESSION['userdata']);
 			return true;
 		}
 			return true;
 	}
-	function info($field=''){
+    function info($field=''){
 		if(!empty($field)){
 			if(isset($_SESSION['system_info'][$field]))
 				return $_SESSION['system_info'][$field];
