@@ -21,7 +21,7 @@
 				</colgroup>
 				<thead>
 					<tr>
-						<th>#</th>
+						<th>Id</th>
 						<th>Name</th>
 						<th>Type</th>
 						<th>Agent</th>
@@ -31,12 +31,11 @@
 				</thead>
 				<tbody>
 					<?php 
-					    $i = 1;
 						$qry = $conn->query("select p.id, p.name, pt.type, CONCAT(u.first_name, ' ', u.last_name) as fullname, p.status, u.email from properties p join agents a on p.agent_id = a.id join users u on a.user_id = u.id join property_types pt on p.type_id = pt.id where p.deleted_date is null");
 						while($row = $qry->fetch_assoc()):
 					?>
 						<tr>
-							<td class="text-center"><?php echo $i++; ?></td>
+							<td class="text-center"><?= $row['id'] ?></td>
 							<td><p class="m-0 truncate-1"><?= $row['name'] ?></p></td>
 							<td><p class="m-0 truncate-1"><?= $row['type'] ?></p></td>
 							<td><p class="m-0 truncate-1"><?= $row['fullname'] ?></p></td>
@@ -70,9 +69,6 @@
 </div>
 <script>
 	$(document).ready(function(){
-		$('.delete').click(function(){
-			_conf("Are you sure you want to delete this property permanently?","delete_property",[$(this).attr('data-id')])
-		})
 		$('.table').dataTable({
 			columnDefs: [
 					{ orderable: false, targets: [5] }
@@ -81,27 +77,4 @@
 		});
 		$('.dataTable td,.dataTable th').addClass('py-1 px-2 align-middle')
 	})
-
-	function delete_property($id){
-		start_loader();
-		$.ajax({
-			url:_base_url_+"classes/property.php?f=delete",
-			method:"POST",
-			data:{id: $id},
-			dataType:"json",
-			error:err=>{
-				console.log(err)
-				alert_toast("An error occured.",'error');
-				end_loader();
-			},
-			success:function(resp){
-				if(typeof resp== 'object' && resp.status == 'success'){
-					location.replace('./?page=property_list');
-				}else{
-					alert_toast("An error occured.",'error');
-					end_loader();
-				}
-			}
-		})
-	}
 </script>

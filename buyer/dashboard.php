@@ -2,14 +2,14 @@
 <div class="container">
   <?php 
     $files = array();
-      $fopen = scandir(base_app.'uploads/banner');
+      $fopen = scandir(base_app.'uploads/banner/buyer');
       foreach($fopen as $fname){
         if(in_array($fname,array('.','..')))
           continue;
-        $files[]= validate_image('uploads/banner/'.$fname);
+        $files[]= validate_image('uploads/banner/buyer/'.$fname);
       }
   ?>
-  <div id="tourCarousel"  class="carousel slide" data-ride="carousel" data-interval="3000">
+  <div id="tourCarousel"  class="carousel slide" data-ride="carousel" data-interval="2000">
       <div class="carousel-inner h-100">
           <?php foreach($files as $k => $img): ?>
           <div class="carousel-item  h-100 <?php echo $k == 0? 'active': '' ?>">

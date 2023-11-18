@@ -9,7 +9,7 @@
 	</div>
 	<div class="card-body">
         <div class="container-fluid">
-			<table class="table table-hover table-striped" id="list">
+			<table class="table table-hover table-striped table-bordered">
 				<colgroup>
 					<col width="18%">
 					<col width="16%">
@@ -28,7 +28,6 @@
 				</thead>
 				<tbody>
 					<?php 
-					$i = 1;
 						$qry = $conn->query("SELECT concat(u.first_name,' ',u.last_name) as fullname, u.email, u.mobile, 
                         concat(u.address_line1,' ',u.city,' ',u.postal_code) as address, a.agency_name
                         from agents a
@@ -49,3 +48,40 @@
 		</div>
 	</div>
 </div>
+<script>
+	$(document).ready(function(){
+		$('.delete').click(function(){
+			_conf("Are you sure you want to delete this property permanently?","delete_property",[$(this).attr('data-id')])
+		})
+		$('.table').dataTable({
+			columnDefs: [
+					{ orderable: false, targets: [5] }
+			],
+			order:[0,'asc']
+		});
+		$('.dataTable td,.dataTable th').addClass('py-1 px-2 align-middle')
+	})
+
+	function delete_property($id){
+		start_loader();
+		$.ajax({
+			url:_base_url_+"classes/property.php?f=delete",
+			method:"POST",
+			data:{id: $id},
+			dataType:"json",
+			error:err=>{
+				console.log(err)
+				alert_toast("An error occured.",'error');
+				end_loader();
+			},
+			success:function(resp){
+				if(typeof resp== 'object' && resp.status == 'success'){
+					location.replace('./?page=property_list');
+				}else{
+					alert_toast("An error occured.",'error');
+					end_loader();
+				}
+			}
+		})
+	}
+</script>

@@ -2,11 +2,11 @@
 <div class="container">
   <?php 
     $files = array();
-      $fopen = scandir(base_app.'uploads/banner');
+      $fopen = scandir(base_app.'uploads/banner/agent');
       foreach($fopen as $fname){
         if(in_array($fname,array('.','..')))
           continue;
-        $files[]= validate_image('uploads/banner/'.$fname);
+        $files[]= validate_image('uploads/banner/agent/'.$fname);
       }
   ?>
   <div id="tourCarousel"  class="carousel slide" data-ride="carousel" data-interval="3000">

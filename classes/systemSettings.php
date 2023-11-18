@@ -14,7 +14,7 @@ class SystemSettings extends DBConnection{
         // Store system settings in session variables
         $_SESSION['system_info']['name'] = "Real Estate System";
         $_SESSION['system_info']['short_name'] = "Real Estate";
-        $_SESSION['system_info']['logo'] = "uploads/logo-1645233884.jpg?v=1645233884";
+        $_SESSION['system_info']['logo'] = "uploads/logo.png";
         $_SESSION['system_info']['cover'] = "uploads/background.jpg";
 	}
 	function update_system_info(){

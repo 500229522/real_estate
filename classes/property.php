@@ -124,6 +124,17 @@ Class Property extends DBConnection {
 					$resp['msg'] .= " But ".$err;
 				}
 			}
+
+            if(!empty($fname) || !empty($spath)) {
+                $img_sql = "INSERT INTO property_images set property_id = '{$property_id}', thumbnail_path = '{$fname}'";
+                $img_sql = $this->conn->query($img_sql);
+                if(!$img_sql){
+                    $resp['status'] = 'failed';
+                    $resp['msg'] = " Saving Real Estate Images failed.";
+                    $resp['err'] = $this->conn->error;
+                    $resp['sql'] = $img_sql;
+                }
+            }
 			$data="";
             
             // Store property amenities

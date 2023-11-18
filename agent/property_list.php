@@ -24,7 +24,7 @@
 				</colgroup>
 				<thead>
 					<tr>
-						<th>#</th>
+						<th>Id</th>
 						<th>Name</th>
 						<th>Type</th>
 						<th>Agent</th>
@@ -39,7 +39,7 @@
 						while($row = $qry->fetch_assoc()):
 					?>
 						<tr>
-							<td class="text-center"><?php echo $i++; ?></td>
+							<td class="text-center"><?= $row['id'] ?></td>
 							<td><p class="m-0 truncate-1"><?= $row['name'] ?></p></td>
 							<td><p class="m-0 truncate-1"><?= $row['type'] ?></p></td>
 							<td><p class="m-0 truncate-1"><?= $row['fullname'] ?></p></td>
