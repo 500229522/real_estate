@@ -10,18 +10,18 @@ if(isset($_GET['id'])){
         }
         if(isset($id)){
             $image_arry = [];
-            $img_qry = $conn->query("SELECT * FROM `property_images` where property_id = '{$_GET['id']}'");
+            $img_qry = $conn->query("SELECT * FROM `property_images` where property_id = '{$_GET['id']}' and deleted_date is null");
             $image_arry = $img_qry->fetch_array();
 
             $amenity_arr = [];
-            $amentiy_qry = $conn->query("select a.amenity from property_amenities pa join properties p on pa.property_id = p.id join amenities a on pa.amenity_id = a.id where pa.property_id = '{$_GET['id']}'");
+            $amentiy_qry = $conn->query("select a.amenity from property_amenities pa join properties p on pa.property_id = p.id join amenities a on pa.amenity_id = a.id where pa.property_id = '{$_GET['id']}' and pa.deleted_date is null");
             while($row = $amentiy_qry->fetch_assoc()){
                 $amenity_arr[] = $row;
             }
         }
         if(isset($agent_id)){
             $agent_det = [];
-            $agent = $conn->query("SELECT u.mobile, u.email, u.role, CONCAT(u.first_name,' ', u.last_name) as fullname FROM agents a join users u on a.user_id = u.id where a.id = '{$agent_id}' ");
+            $agent = $conn->query("SELECT u.mobile, u.email, u.role, CONCAT(u.first_name,' ', u.last_name) as fullname FROM agents a join users u on a.user_id = u.id where a.id = '{$agent_id}' and a.deleted_date is null ");
             $agent_det = $agent->fetch_array();
         }
     }else{
@@ -171,10 +171,10 @@ $(function(){
         $(this).addClass("active")
     })
     $('#delete_property').click(function(){
-        _conf("Are you sure do you want to delete this Real Estate permanently?","delete_property",[])
+        _conf("Are you sure do you want to delete this Real Estate permanently?","delete_prop",[])
     })
 })
-function delete_property($id){
+function delete_prop($id){
 		start_loader();
 		$.ajax({
 			url:_base_url_+"classes/property.php?f=delete",

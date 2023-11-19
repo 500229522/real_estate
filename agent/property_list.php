@@ -61,9 +61,11 @@
 								  	<a class="dropdown-item" href="?page=view_property&id=<?php echo $row['id'] ?>"><span class="fa fa-eye text-dark"></span> View</a>
 				                    <div class="dropdown-divider"></div>
 				                    <a class="dropdown-item" href="?page=property&id=<?php echo $row['id'] ?>"><span class="fa fa-edit text-primary"></span> Update</a>
-				                    <div class="dropdown-divider"></div>
-				                    <a class="dropdown-item delete" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
-				                  </div>
+				                    <?php if($row['status'] == "Active"): ?>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item delete" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
+                                    <?php endif; ?>
+                                </div>
 							</td>
 						</tr>
 					<?php endwhile; ?>
@@ -76,7 +78,7 @@
 <script>
 	$(document).ready(function(){
 		$('.delete').click(function(){
-			_conf("Are you sure you want to delete this property permanently?","delete_property",[$(this).attr('data-id')])
+			_conf("Are you sure you want to delete this Real Estate permanently?","delete_prop",[$(this).attr('data-id')])
 		})
 		$('.table').dataTable({
 			columnDefs: [
@@ -87,7 +89,7 @@
 		$('.dataTable td,.dataTable th').addClass('py-1 px-2 align-middle')
 	})
 
-	function delete_property($id){
+	function delete_prop($id){
 		start_loader();
 		$.ajax({
 			url:_base_url_+"classes/property.php?f=delete",

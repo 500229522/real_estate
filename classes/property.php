@@ -180,7 +180,13 @@ Class Property extends DBConnection {
 		$del = $this->conn->query("UPDATE `properties` SET deleted_date = '{$deleted_date}' WHERE id = '{$id}'");
 		if($del){
 			$resp['status'] = 'success';
-			$this->settings->set_flashdata('success'," property successfully deleted.");			
+            $delAmenities = $this->conn->query("UPDATE `property_amenities` SET deleted_date = '{$deleted_date}' WHERE property_id = '{$id}'");
+            if ($delAmenities) {
+                $this->settings->set_flashdata('success'," Real Estate Deleted Successfully.");	
+            } else {
+                $resp['status'] = 'failed';
+                $resp['error'] = "Failed to delete real estate";
+            }		
 		}else{
 			$resp['status'] = 'failed';
 			$resp['error'] = $this->conn->error;
