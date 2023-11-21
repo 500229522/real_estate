@@ -17,6 +17,7 @@ Class Property extends DBConnection {
         // Get the id of the agent which is stored in userdata session variable
 		$_POST['agent_id'] = $this->settings->userdata('id');
         
+        // Import variables from data array which is passed when the property save function is being called
 		extract($_POST);
 		$prop_tbl_allowed_fields = ["agent_id","name","type_id","purpose","status","price","address_line","city","country","postal_code","area","description","coordinates"];
 		$data = "";
@@ -172,14 +173,21 @@ Class Property extends DBConnection {
 	}
 
     function delete(){
+        // Import variables from data array which is passed when the delete property function is being called
 		extract($_POST);
 
+        // Set default time zone
         date_default_timezone_set("EST5EDT");
+
+        // Declare the current date
         $deleted_date = date('Y-m-d');
 
+        // Update the properties table deleted date to current date defined above
 		$del = $this->conn->query("UPDATE `properties` SET deleted_date = '{$deleted_date}' WHERE id = '{$id}'");
 		if($del){
 			$resp['status'] = 'success';
+
+            // Update deleted date of property amenities table
             $delAmenities = $this->conn->query("UPDATE `property_amenities` SET deleted_date = '{$deleted_date}' WHERE property_id = '{$id}'");
             if ($delAmenities) {
                 $this->settings->set_flashdata('success'," Real Estate Deleted Successfully.");	

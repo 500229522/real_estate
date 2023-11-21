@@ -7,7 +7,6 @@ class Login extends DBConnection {
 		$this->settings = $_settings;
 
 		parent::__construct();
-		ini_set('display_error', 1);
 	}
 	public function __destruct(){
 		parent::__destruct();
